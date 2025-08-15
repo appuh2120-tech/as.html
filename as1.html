@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>🛒 Shopping Cart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; background:#f4f4f4; padding:20px; }
+        h1 { text-align:center; }
+        .product, .cart-item { background:white; padding:15px; margin:10px 0; border-radius:5px; }
+        button { padding:6px 12px; cursor:pointer; margin-left:5px; border-radius:4px; background:orange; color:white; border:none; }
+    </style>
+</head>
+<body>
+
+<h1>🛒 Shopping Cart System</h1>
+
+<div id="productsList"></div>
+
+<h2>🧺 Cart</h2>
+<div id="cartList"></div>
+<p id="totalPrice"><strong>Total: ₹0</strong></p>
+<button onclick="checkout()">Checkout</button>
+
+<script>
+const products = [
+    { name:"Laptop", price:45000 },
+    { name:"Shirt", price:799 },
+    { name:"Smartphone", price:12000 },
+    { name:"Book - JS Guide", price:499 },
+    { name:"Jacket", price:1500 },
+    { name:"Headphones", price:1200 }
+];
+
+let cart = [];
+
+function displayProducts() {
+    const container = document.getElementById("productsList");
+    container.innerHTML = "";
+    products.forEach((p,i) => {
+        container.innerHTML += `<div class="product">
+            <strong>${p.name}</strong> - ₹${p.price} 
+            <button onclick="addToCart(${i})">Add to Cart</button>
+        </div>`;
+    });
+}
+
+function addToCart(index) {
+    const product = products[index];
+    const existing = cart.find(item => item.name === product.name);
+    if (existing) existing.qty++;
+    else cart.push({ ...product, qty: 1 });
+    displayCart();
+}
+
+function displayCart() {
+    const container = document.getElementById("cartList");
+    container.innerHTML = "";
+    let total = 0;
+    cart.forEach((item,i) => {
+        total += item.price * item.qty;
+        container.innerHTML += `<div class="cart-item">
+            ${item.name} - ₹${item.price} x ${item.qty} 
+            <button onclick="removeFromCart(${i})">Remove</button>
+        </div>`;
+    });
+    document.getElementById("totalPrice").innerHTML = `<strong>Total: ₹${total}</strong>`;
+}
+
+function removeFromCart(index) {
+    cart.splice(index,1);
+    displayCart();
+}
+
+function checkout() {
+    if(cart.length === 0) { alert("Cart is empty!"); return; }
+    // Firebase save code ಇಲ್ಲಿಗೆ add ಮಾಡಬಹುದು
+    alert("✅ Order Placed Successfully!");
+    cart = [];
+    displayCart();
+}
+
+displayProducts();
+displayCart();
+</script>
+
+</body>
+</html>
